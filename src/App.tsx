@@ -70,54 +70,117 @@ function App() {
     return (
         <div id="app">
             <PhaserGame ref={phaserRef} currentActiveScene={currentScene} />
+            {currentSceneKey === "MainMenu" && (
+                <button
+                    style={{
+                        position: "absolute",
+                        top: 20,
+                        left: 20,
+                        zIndex: 10,
+                        pointerEvents: "auto",
+                    }}
+                    onClick={changeScene}
+                >
+                    Start
+                </button>
+            )}
             {currentSceneKey === "Game" && (
-                <>
-                    <form
-                        style={{
-                            position: "absolute",
-                            top: 20,
-                            left: 20,
-                            zIndex: 10,
-                            pointerEvents: "auto",
-                        }}
-                        onSubmit={(e) => {
-                            e.preventDefault();
+                <form
+                    style={{
+                        position: "absolute",
+                        top: 75,
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        zIndex: 10,
+                        pointerEvents: "auto",
+                        width: "fit-content",
+                        textAlign: "center",
+                        backgroundColor: "#3E2723",
+                        color: "#F5E9DA",
+                        borderRadius: "8px",
+                        boxShadow:
+                            "0 8px 24px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.1), 0 0 0 12px #8D6E63",
+                        padding: "24px",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "12px",
+                        minWidth: "320px",
+                        backgroundImage: `
+            linear-gradient(rgba(139, 90, 43, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(139, 90, 43, 0.1) 1px, transparent 1px)
+        `,
+                        backgroundSize: "20px 20px",
+                    }}
+                    onSubmit={(e) => {
+                        e.preventDefault();
 
-                            if (playerAnswer === randomWord.caseValue) {
-                                const newRandomWord = getRandomWord();
-                                setRandomWord(newRandomWord);
-                                setPlayerAnswer("");
-                                callEnemyTakeDamage();
-                                setScore(score + 1);
-                            } else {
-                                callLancelotTakeDamage();
-                            }
+                        if (playerAnswer === randomWord.caseValue) {
+                            const newRandomWord = getRandomWord();
+                            setRandomWord(newRandomWord);
+                            setPlayerAnswer("");
+                            callEnemyTakeDamage();
+                            setScore(score + 1);
+                        } else {
+                            callLancelotTakeDamage();
+                        }
+                    }}
+                >
+                    <div
+                        style={{
+                            fontSize: "20px",
+                            fontWeight: "bold",
+                            borderBottom: "2px solid #8D6E63",
+                            paddingBottom: "8px",
+                            marginBottom: "8px",
+                            textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
                         }}
                     >
-                        <p>Score: {score}</p>
-                        <p>
-                            {randomWord.word} | {randomWord.tr}
-                        </p>
-                        <p>{randomWord.kotous}</p>
-                        <p>{getFullCaseName(randomWord.case)}</p>
-                        <input
-                            type="text"
-                            placeholder="Enter text..."
-                            style={{ padding: "8px", fontSize: "16px" }}
-                            value={playerAnswer}
-                            onChange={(e) => setPlayerAnswer(e.target.value)}
-                        />
-                    </form>
-                </>
+                        Score: {score}
+                    </div>
+                    <p
+                        style={{
+                            margin: "4px 0",
+                            fontSize: "18px",
+                            fontWeight: "bold",
+                        }}
+                    >
+                        {randomWord.word} | {randomWord.tr}
+                    </p>
+                    <p style={{ margin: "4px 0", fontStyle: "italic" }}>
+                        type: {randomWord.kotous}
+                    </p>
+                    <p
+                        style={{
+                            margin: "4px 0",
+                            fontSize: "16px",
+                            color: "#FFD700",
+                        }}
+                    >
+                        {getFullCaseName(randomWord.case)}
+                    </p>
+                    <input
+                        type="text"
+                        placeholder="Enter answer..."
+                        style={{
+                            padding: "12px",
+                            fontSize: "16px",
+                            borderRadius: "4px",
+                            border: "2px solid #8D6E63",
+                            backgroundColor: "#FFEFD5",
+                            color: "#3E2723",
+                            fontFamily: "inherit",
+                        }}
+                        onFocus={(e) => {
+                            e.currentTarget.style.borderColor = "#FFD700";
+                        }}
+                        onBlur={(e) => {
+                            e.currentTarget.style.borderColor = "#8D6E63";
+                        }}
+                        value={playerAnswer}
+                        onChange={(e) => setPlayerAnswer(e.target.value)}
+                    />
+                </form>
             )}
-
-            <div>
-                <div>
-                    <button className="button" onClick={changeScene}>
-                        Change Scene
-                    </button>
-                </div>
-            </div>
         </div>
     );
 }
