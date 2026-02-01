@@ -93,6 +93,15 @@ export class Preloader extends Scene {
             frameWidth: 32,
             frameHeight: 32,
         });
+
+        this.load.spritesheet("heart_empty", "heart_empty_.png", {
+            frameWidth: 16,
+            frameHeight: 16,
+        });
+        this.load.spritesheet("heart_full", "heart_full_.png", {
+            frameWidth: 16,
+            frameHeight: 16,
+        });
     }
 
     create() {
