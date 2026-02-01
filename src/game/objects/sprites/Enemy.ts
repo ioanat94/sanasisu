@@ -1,3 +1,5 @@
+import { Game } from "../../scenes/Game";
+
 class EnemySprite extends Phaser.GameObjects.Sprite {
     private static readonly COLUMNS = 8;
     private static readonly FRAME_COUNT = 4;
@@ -115,23 +117,22 @@ class EnemySprite extends Phaser.GameObjects.Sprite {
             this.playHit();
         } else {
             this.playDeath();
-        }
-    }
 
-    heal(amount: number = 1) {
-        this.currentHealth = Math.min(
-            this.maxHealth,
-            this.currentHealth + amount,
-        );
-        this.updateHearts();
+            const texture = this.texture.key;
+
+            this.once(`animationcomplete-${texture}-death`, () => {
+                const gameScene = this.scene as Game;
+                if (gameScene.spawnNewEnemy) {
+                    gameScene.spawnNewEnemy();
+                } else {
+                    console.error("spawnNewEnemy method not found on scene");
+                }
+            });
+        }
     }
 
     getHealth(): number {
         return this.currentHealth;
-    }
-
-    getMaxHealth(): number {
-        return this.maxHealth;
     }
 
     playHit() {

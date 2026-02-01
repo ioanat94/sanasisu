@@ -8,6 +8,8 @@ export class Game extends Scene {
     camera: Phaser.Cameras.Scene2D.Camera;
     background: Phaser.GameObjects.Image;
     gameText: Phaser.GameObjects.Text;
+    public lancelot: LancelotSprite;
+    public enemy: EnemySprite;
 
     constructor() {
         super("Game");
@@ -35,17 +37,41 @@ export class Game extends Scene {
             tile.setDepth(-1);
         }
 
-        const lancelot = new LancelotSprite(this, 200, 550, "lancelot");
+        this.lancelot = new LancelotSprite(this, 200, 550, "lancelot");
         const lancelotWeapon = new WeaponSprite(this, 330, 550, "excalibur");
-        const enemy = EnemySprite.getRandomEnemy(this, 860, 550);
+        this.enemy = EnemySprite.getRandomEnemy(this, 860, 550);
         const enemyWeapon = new WeaponSprite(this, 730, 550, "pickaxe");
 
-        this.add.existing(lancelot);
+        this.add.existing(this.lancelot);
         this.add.existing(lancelotWeapon);
-        this.add.existing(enemy);
+        this.add.existing(this.enemy);
         this.add.existing(enemyWeapon);
 
         EventBus.emit("current-scene-ready", this);
+    }
+
+    public spawnNewEnemy() {
+        // Fade out and destroy current enemy
+        this.tweens.add({
+            targets: [this.enemy],
+            alpha: 0,
+            duration: 500,
+            onComplete: () => {
+                this.enemy.destroy();
+
+                this.enemy = EnemySprite.getRandomEnemy(this, 860, 550);
+
+                this.add.existing(this.enemy);
+
+                this.enemy.setAlpha(0);
+
+                this.tweens.add({
+                    targets: [this.enemy],
+                    alpha: 1,
+                    duration: 500,
+                });
+            },
+        });
     }
 
     changeScene() {

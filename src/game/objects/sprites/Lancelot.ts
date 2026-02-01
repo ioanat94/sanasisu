@@ -1,6 +1,6 @@
 class LancelotSprite extends Phaser.GameObjects.Sprite {
     private maxHealth: number = 3;
-    private currentHealth: number = 2;
+    private currentHealth: number = 3;
     private hearts: Phaser.GameObjects.Image[] = [];
     private heartX: number;
     private heartY: number;
@@ -84,20 +84,8 @@ class LancelotSprite extends Phaser.GameObjects.Sprite {
         }
     }
 
-    heal(amount: number = 1) {
-        this.currentHealth = Math.min(
-            this.maxHealth,
-            this.currentHealth + amount,
-        );
-        this.updateHearts();
-    }
-
     getHealth(): number {
         return this.currentHealth;
-    }
-
-    getMaxHealth(): number {
-        return this.maxHealth;
     }
 
     playHit() {
