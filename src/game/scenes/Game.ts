@@ -15,25 +15,35 @@ export class Game extends Scene {
 
     create() {
         this.camera = this.cameras.main;
-        this.camera.setBackgroundColor(0x00ff00);
+        this.cameras.main.setBackgroundColor(0x87ceeb);
 
-        this.background = this.add.image(512, 384, "background");
-        this.background.setAlpha(0.5);
+        const tileSize = 16;
+        const scale = 8;
+        const scaledTileSize = tileSize * scale;
+        const groundY = this.cameras.main.height - scaledTileSize;
 
-        const lancelot = new LancelotSprite(this, 100, 600, "lancelot");
-        const lancelotWeapon = new WeaponSprite(this, 170, 600, "excalibur");
-        const enemy = EnemySprite.getRandomEnemy(this, 900, 600);
-        const enemyWeapon = new WeaponSprite(this, 830, 600, "pickaxe");
+        for (let i = 0; i < 10; i++) {
+            const frameIndex = 11 + i;
+            const tile = this.add.image(
+                i * scaledTileSize,
+                groundY,
+                "ground",
+                frameIndex,
+            );
+            tile.setOrigin(0, 0);
+            tile.setScale(scale);
+            tile.setDepth(-1);
+        }
+
+        const lancelot = new LancelotSprite(this, 200, 550, "lancelot");
+        const lancelotWeapon = new WeaponSprite(this, 330, 550, "excalibur");
+        const enemy = EnemySprite.getRandomEnemy(this, 860, 550);
+        const enemyWeapon = new WeaponSprite(this, 730, 550, "pickaxe");
 
         this.add.existing(lancelot);
         this.add.existing(lancelotWeapon);
         this.add.existing(enemy);
         this.add.existing(enemyWeapon);
-
-        setTimeout(() => {
-            enemy.playDeath();
-            enemyWeapon.playAttack();
-        }, 1000);
 
         EventBus.emit("current-scene-ready", this);
     }

@@ -26,8 +26,7 @@ class EnemySprite extends Phaser.GameObjects.Sprite {
     ) {
         super(scene, x, y, texture, frame);
 
-        this.setScale(4);
-        this.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+        this.setScale(8);
         this.setFlipX(true);
 
         const animConfig =
