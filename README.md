@@ -9,9 +9,9 @@
   <p align="center">
     A browser game to practice Finnish noun inflection.
     <br />  
-    <a href="https://ioanat94.itch.io/sanasisu" target="_blank">Play for free on itch.io!</a>
-    <br />  
   </p>
+
+  [Play for free on itch.io!](https://ioanat94.itch.io/sanasisu)
 </div>
 
 <!-- TABLE OF CONTENTS -->
