@@ -3,7 +3,6 @@ import { Word, cases, wordlist } from "./utils/wordlist";
 import { useRef, useState } from "react";
 
 import { Game } from "./game/scenes/Game";
-import { MainMenu } from "./game/scenes/MainMenu";
 
 function App() {
     //  References to the PhaserGame component (game and scene are exposed)
@@ -21,16 +20,6 @@ function App() {
     const [score, setScore] = useState<number>(0);
 
     console.log(randomWord);
-
-    const changeScene = () => {
-        if (phaserRef.current) {
-            const scene = phaserRef.current.scene as MainMenu;
-
-            if (scene) {
-                scene.changeScene();
-            }
-        }
-    };
 
     // Event emitted from the PhaserGame component
     const currentScene = (scene: Phaser.Scene) => {
@@ -81,20 +70,6 @@ function App() {
     return (
         <div id="app">
             <PhaserGame ref={phaserRef} currentActiveScene={currentScene} />
-            {currentSceneKey === "MainMenu" && (
-                <button
-                    style={{
-                        position: "absolute",
-                        top: 20,
-                        left: 20,
-                        zIndex: 10,
-                        pointerEvents: "auto",
-                    }}
-                    onClick={changeScene}
-                >
-                    Start
-                </button>
-            )}
             {currentSceneKey === "Game" && (
                 <form
                     style={formStyle}

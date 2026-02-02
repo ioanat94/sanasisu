@@ -12,6 +12,9 @@ export class Game extends Scene {
     public enemy: EnemySprite;
     public lancelotWeapon: WeaponSprite;
     public enemyWeapon: WeaponSprite;
+    private soundButton: Phaser.GameObjects.Image;
+    private helpButton: Phaser.GameObjects.Image;
+    private isMuted: boolean = false;
 
     constructor() {
         super("Game");
@@ -19,7 +22,6 @@ export class Game extends Scene {
 
     create() {
         this.camera = this.cameras.main;
-        this.cameras.main.setBackgroundColor(0x87ceeb);
 
         const tileSize = 16;
         const scale = 8;
@@ -49,6 +51,22 @@ export class Game extends Scene {
         this.add.existing(this.enemy);
         this.add.existing(this.enemyWeapon);
 
+        // Add sound toggle button (top left)
+        this.soundButton = this.add.image(40, 40, "sound_on");
+        this.soundButton.setScale(4);
+        this.soundButton.setInteractive({ useHandCursor: true });
+        this.soundButton.setDepth(100);
+
+        this.soundButton.on("pointerdown", () => {
+            this.toggleSound();
+        });
+
+        // Add help button (to the right of sound button)
+        this.helpButton = this.add.image(100, 40, "help");
+        this.helpButton.setScale(4);
+        this.helpButton.setInteractive({ useHandCursor: true });
+        this.helpButton.setDepth(100);
+
         EventBus.emit("current-scene-ready", this);
     }
 
@@ -74,6 +92,18 @@ export class Game extends Scene {
                 });
             },
         });
+    }
+
+    private toggleSound() {
+        this.isMuted = !this.isMuted;
+        this.sound.mute = this.isMuted;
+
+        // Update button image
+        if (this.isMuted) {
+            this.soundButton.setTexture("sound_off");
+        } else {
+            this.soundButton.setTexture("sound_on");
+        }
     }
 
     changeScene() {

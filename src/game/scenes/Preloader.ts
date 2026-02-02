@@ -23,9 +23,6 @@ export class Preloader extends Scene {
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath("assets");
 
-        this.load.image("logo", "logo.png");
-        this.load.image("star", "star.png");
-
         this.load.spritesheet("ground", "islands_.png", {
             frameWidth: 16,
             frameHeight: 16,
@@ -103,6 +100,10 @@ export class Preloader extends Scene {
             frameHeight: 16,
         });
 
+        this.load.image("sound_on", "sound_on.png");
+        this.load.image("sound_off", "sound_off.png");
+        this.load.image("help", "help.png");
+
         this.load.audio("bgMusic", "sound/Goblins_Dance_(Battle).wav");
         this.load.audio("excaliburAttack", "sound/human_atk_sword.wav");
         this.load.audio("pickaxeAttack", "sound/orc_atk_sword.wav");
@@ -110,6 +111,8 @@ export class Preloader extends Scene {
         this.load.audio("enemyHit", "sound/orc_damage.wav");
         this.load.audio("lancelotDeath", "sound/human_death_spin.wav");
         this.load.audio("enemyDeath", "sound/orc_death_spin.wav");
+
+        this.load.font("BoldPixels", "BoldPixels.ttf");
     }
 
     create() {
