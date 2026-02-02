@@ -111,8 +111,6 @@ function App() {
         }
     }, [currentSceneKey]);
 
-    console.log(randomWord);
-
     const saveCurrentGameState = (
         currentScore?: number,
         currentWord?: typeof randomWord,
