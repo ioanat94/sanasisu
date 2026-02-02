@@ -5,7 +5,6 @@
   <a href="https://github.com/ioanat94/sanasisu">
     <img src="media/logo_large_transparent.png" alt="Sanasisu Logo" width="250" height="auto">
   </a>
-<h3 align="center">Sanasisu</h3>
 
   <p align="center">
     A browser game to practice Finnish noun inflection.
