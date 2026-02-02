@@ -1,6 +1,3 @@
-import { IRefPhaserGame, PhaserGame } from "./PhaserGame";
-import { Word, cases, wordlist } from "./utils/wordlist";
-import { useEffect, useRef, useState } from "react";
 import {
     GameState,
     clearGameState,
@@ -9,10 +6,13 @@ import {
     saveGameState,
     saveHighscore,
 } from "./utils/storage";
+import { IRefPhaserGame, PhaserGame } from "./PhaserGame";
+import { Word, cases, wordlist } from "./utils/wordlist";
+import { useEffect, useRef, useState } from "react";
 
+import { EnemySprite } from "./game/objects/sprites/Enemy";
 import { EventBus } from "./game/EventBus";
 import { Game } from "./game/scenes/Game";
-import { EnemySprite } from "./game/objects/sprites/Enemy";
 
 function App() {
     //  References to the PhaserGame component (game and scene are exposed)
@@ -191,6 +191,8 @@ function App() {
         }
     };
 
+    console.log(randomWord);
+
     return (
         <div id="app">
             <PhaserGame ref={phaserRef} currentActiveScene={currentScene} />
@@ -240,7 +242,7 @@ function App() {
                     <p style={wordStyle}>
                         {randomWord.word} | {randomWord.tr}
                     </p>
-                    <p style={wordTypeStyle}>type: {randomWord.kotous}</p>
+                    <p style={wordKotusStyle}>kotus: {randomWord.kotous}</p>
                     <p style={wordCaseStyle}>
                         {getFullCaseName(randomWord.case)}
                     </p>
@@ -286,8 +288,9 @@ function App() {
                                     English translation.
                                 </p>
                                 <p style={helpTextStyle}>
-                                    3. The word type. This should give you a
-                                    hint as to how the word should be inflected.
+                                    3. The word kotus type. This should give you
+                                    a hint as to how the word should be
+                                    inflected.
                                 </p>
                             </div>
                             <img
@@ -331,6 +334,12 @@ function App() {
                         <h2 style={helpTitleStyle}>Game Over!</h2>
                         <p style={gameOverScoreStyle}>Final Score: {score}</p>
                         <p style={highscoreStyle}>Highscore: {highscore}</p>
+                        <p style={correctAnswerStyle}>
+                            The correct answer was:{" "}
+                            <span style={correctAnswerSpanStyle}>
+                                {randomWord.caseValue}
+                            </span>
+                        </p>
                         <button
                             style={closeButtonStyle}
                             onClick={handleRestart}
@@ -418,7 +427,7 @@ const wordStyle: React.CSSProperties = {
     fontWeight: "bold",
 };
 
-const wordTypeStyle: React.CSSProperties = {
+const wordKotusStyle: React.CSSProperties = {
     margin: "4px 0",
     fontStyle: "italic",
 };
@@ -547,6 +556,18 @@ const highscoreStyle: React.CSSProperties = {
     margin: "16px 0",
     color: "#FFA500",
     textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
+};
+
+const correctAnswerStyle: React.CSSProperties = {
+    fontSize: "16px",
+    margin: "16px 0 24px",
+    color: "#90EE90",
+    textShadow: "1px 1px 2px rgba(0,0,0,0.5)",
+    lineHeight: "1.5",
+};
+
+const correctAnswerSpanStyle: React.CSSProperties = {
+    fontWeight: "bold",
 };
 
 export default App;
