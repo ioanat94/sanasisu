@@ -59,6 +59,11 @@ class WeaponSprite extends Phaser.GameObjects.Sprite {
 
     playAttack() {
         this.floatTween.pause();
+        const attackSfx = this.scene.sound.add(`${this.texture.key}Attack`, {
+            loop: false,
+            volume: 0.5,
+        });
+        attackSfx.play();
         this.play("attack");
         this.once("animationcomplete-attack", () => {
             this.setFrame(0);

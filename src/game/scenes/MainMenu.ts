@@ -27,6 +27,12 @@ export class MainMenu extends Scene {
             .setOrigin(0.5)
             .setDepth(100);
 
+        const music = this.sound.add("bgMusic", {
+            loop: true,
+            volume: 1,
+        });
+        music.play();
+
         EventBus.emit("current-scene-ready", this);
     }
 

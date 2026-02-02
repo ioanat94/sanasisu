@@ -1,3 +1,31 @@
+export     const cases = {
+        nom_p: "nominative plural",
+        gen_s: "genitive singular",
+        gen_p: "genitive plural",
+        par_s: "partitive singular",
+        par_p: "partitive plural",
+        ine_s: "inessive singular (-ssA)",
+        ine_p: "inessive plural (-ssA)",
+        ela_s: "elative singular (-stA)",
+        ela_p: "elative plural (-stA)",
+        ill_s: "illative singular (-hVn)",
+        ill_p: "illative plural (-hVn)",
+        ade_s: "adessive singular (-llA)",
+        ade_p: "adessive plural (-llA)",
+        abl_s: "ablative singular (-ltA)",
+        abl_p: "ablative plural (-ltA)",
+        all_s: "allative singular (-lle)",
+        all_p: "allative plural (-lle)",
+        ess_s: "essive singular (-nA)",
+        ess_p: "essive plural (-nA)",
+        tra_s: "translative singular (-ksi)",
+        tra_p: "translative plural (-ksi)",
+        abe_s: "abessive singular (-ttA)",
+        abe_p: "abessive plural (-ttA)",
+        ins_p: "instructive plural (-in)",
+        com_p: "comitative plural (-ne)",
+    } as { [key: string]: string };
+
 export type Word = {
     word: string;
     tr: string;

@@ -102,6 +102,14 @@ export class Preloader extends Scene {
             frameWidth: 16,
             frameHeight: 16,
         });
+
+        this.load.audio("bgMusic", "sound/Goblins_Dance_(Battle).wav");
+        this.load.audio("excaliburAttack", "sound/human_atk_sword.wav");
+        this.load.audio("pickaxeAttack", "sound/orc_atk_sword.wav");
+        this.load.audio("lancelotHit", "sound/human_damage.wav");
+        this.load.audio("enemyHit", "sound/orc_damage.wav");
+        this.load.audio("lancelotDeath", "sound/human_death_spin.wav");
+        this.load.audio("enemyDeath", "sound/orc_death_spin.wav");
     }
 
     create() {

@@ -89,6 +89,12 @@ class LancelotSprite extends Phaser.GameObjects.Sprite {
     }
 
     playHit() {
+        const hitSfx = this.scene.sound.add("lancelotHit", {
+            loop: false,
+            volume: 1,
+        });
+        hitSfx.play();
+
         this.play("hit");
         this.once("animationcomplete-hit", () => {
             this.play("idle");
@@ -96,7 +102,15 @@ class LancelotSprite extends Phaser.GameObjects.Sprite {
     }
 
     playDeath() {
-        this.play("death");
+        const deathSfx = this.scene.sound.add("lancelotDeath", {
+            loop: false,
+            volume: 1,
+        });
+        deathSfx.play();
+
+        setTimeout(() => {
+            this.play("death");
+        }, 400);
     }
 }
 

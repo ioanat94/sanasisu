@@ -10,6 +10,8 @@ export class Game extends Scene {
     gameText: Phaser.GameObjects.Text;
     public lancelot: LancelotSprite;
     public enemy: EnemySprite;
+    public lancelotWeapon: WeaponSprite;
+    public enemyWeapon: WeaponSprite;
 
     constructor() {
         super("Game");
@@ -38,14 +40,14 @@ export class Game extends Scene {
         }
 
         this.lancelot = new LancelotSprite(this, 200, 550, "lancelot");
-        const lancelotWeapon = new WeaponSprite(this, 330, 550, "excalibur");
+        this.lancelotWeapon = new WeaponSprite(this, 330, 550, "excalibur");
         this.enemy = EnemySprite.getRandomEnemy(this, 860, 550);
-        const enemyWeapon = new WeaponSprite(this, 730, 550, "pickaxe");
+        this.enemyWeapon = new WeaponSprite(this, 730, 550, "pickaxe");
 
         this.add.existing(this.lancelot);
-        this.add.existing(lancelotWeapon);
+        this.add.existing(this.lancelotWeapon);
         this.add.existing(this.enemy);
-        this.add.existing(enemyWeapon);
+        this.add.existing(this.enemyWeapon);
 
         EventBus.emit("current-scene-ready", this);
     }

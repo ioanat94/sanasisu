@@ -141,9 +141,23 @@ class EnemySprite extends Phaser.GameObjects.Sprite {
         this.once(`animationcomplete-${texture}-hit`, () => {
             this.play(`${texture}-idle`);
         });
+
+        setTimeout(() => {
+            const hitSfx = this.scene.sound.add("enemyHit", {
+                loop: false,
+                volume: 1,
+            });
+            hitSfx.play();
+        }, 200);
     }
 
     playDeath() {
+        const deathSfx = this.scene.sound.add("enemyDeath", {
+            loop: false,
+            volume: 1,
+        });
+        deathSfx.play();
+
         const texture = this.texture.key;
         this.play(`${texture}-death`);
     }
