@@ -22,6 +22,7 @@
       <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
+        <li><a href="#attributions">Attributions</a></li>
       </ul>
     </li>
     <li>
@@ -49,12 +50,36 @@ Your progress is saved locally to your browser after every answer. As long as yo
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### Built With
+<!-- HOW TO PLAY -->
+## How to Play
+
+<img src="media/how-to.png" alt="Sanasisu How-To" width="800" height="auto"> 
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- BUILT WITH -->
+
+## Built With
 
 * [Phaser](https://phaser.io/)
 * [Typescript](https://www.typescriptlang.org/)
 * [React.js](https://reactjs.org/)
 * [Vite](https://vite.dev/)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- ATTRIBUTIONS -->
+
+## Attributions
+
+Inspired by [Finnish Inflexion Drill](https://tragram.github.io/finnish-inflexion-drill/nouns)  
+Wiktionary data from [Kaikki.org](https://kaikki.org/)  
+
+PixelOperator8 font - [Brackeys' Platformer Bundle](https://brackeysgames.itch.io/brackeys-platformer-bundle?download)  
+BoldPixels font - YukiPixels ([@YukiPixels](https://linktr.ee/yukipixels))  
+Character, Enemy, Weapon and Ground assets - [Kevin's Mom's House](https://itch.io/profile/kevins-moms-house)  
+Help, Sound on and Sound off assets - [UI User Interface Mega Pack by toffeecraft](https://toffeecraft.itch.io/ui-user-interface-mega-pack)  
+Music and sound effects - [Minifantasy Dungeon SFX Pack by leohpaz](https://leohpaz.itch.io/minifantasy-dungeon-sfx-pack)  
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -88,13 +113,6 @@ To get a local copy up and running follow these simple steps.
    ```sh
    npm run dev
    ```
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-<!-- HOW TO PLAY -->
-## How to Play
-
-<img src="media/how-to.png" alt="Sanasisu How-To" width="800" height="auto"> 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
