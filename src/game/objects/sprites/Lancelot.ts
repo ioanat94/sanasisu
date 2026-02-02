@@ -83,8 +83,13 @@ class LancelotSprite extends Phaser.GameObjects.Sprite {
         }
     }
 
-    getHealth(): number {
+    public getHealth(): number {
         return this.currentHealth;
+    }
+
+    public setHealth(health: number): void {
+        this.currentHealth = Math.max(0, Math.min(health, this.maxHealth));
+        this.updateHearts();
     }
 
     playHit() {

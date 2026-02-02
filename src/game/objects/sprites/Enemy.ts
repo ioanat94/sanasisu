@@ -128,8 +128,17 @@ class EnemySprite extends Phaser.GameObjects.Sprite {
         }
     }
 
-    getHealth(): number {
+    public getHealth(): number {
         return this.currentHealth;
+    }
+
+    public setHealth(health: number): void {
+        this.currentHealth = Math.max(0, Math.min(health, this.maxHealth));
+        this.updateHearts();
+    }
+
+    public getTexture(): string {
+        return this.texture.key;
     }
 
     playHit() {
@@ -180,6 +189,15 @@ class EnemySprite extends Phaser.GameObjects.Sprite {
         ];
         const randomTexture = Phaser.Utils.Array.GetRandom(enemies);
         return new EnemySprite(scene, x, y, randomTexture);
+    }
+
+    static createEnemy(
+        scene: Phaser.Scene,
+        x: number,
+        y: number,
+        textureName: string,
+    ): EnemySprite {
+        return new EnemySprite(scene, x, y, textureName);
     }
 }
 

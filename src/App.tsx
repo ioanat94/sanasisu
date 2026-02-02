@@ -1,9 +1,18 @@
 import { IRefPhaserGame, PhaserGame } from "./PhaserGame";
 import { Word, cases, wordlist } from "./utils/wordlist";
 import { useEffect, useRef, useState } from "react";
+import {
+    GameState,
+    clearGameState,
+    getHighscore,
+    loadGameState,
+    saveGameState,
+    saveHighscore,
+} from "./utils/storage";
 
 import { EventBus } from "./game/EventBus";
 import { Game } from "./game/scenes/Game";
+import { EnemySprite } from "./game/objects/sprites/Enemy";
 
 function App() {
     //  References to the PhaserGame component (game and scene are exposed)
@@ -19,6 +28,7 @@ function App() {
     }>(getRandomWord());
     const [playerAnswer, setPlayerAnswer] = useState<string>("");
     const [score, setScore] = useState<number>(0);
+    const [highscore, setHighscore] = useState<number>(getHighscore());
     const [showHelp, setShowHelp] = useState(false);
     const [showGameOver, setShowGameOver] = useState(false);
     const [inputBorderColor, setInputBorderColor] = useState<string>("#8D6E63");
@@ -29,19 +39,100 @@ function App() {
         };
 
         const handleGameOver = () => {
+            saveHighscore(score);
+            setHighscore(getHighscore());
             setShowGameOver(true);
+            clearGameState();
+        };
+
+        const handleEnemySpawned = () => {
+            setTimeout(() => {
+                saveCurrentGameState();
+            }, 100);
+        };
+
+        const handleSoundToggled = () => {
+            setTimeout(() => {
+                saveCurrentGameState();
+            }, 100);
         };
 
         EventBus.on("show-help", handleShowHelp);
         EventBus.on("game-over", handleGameOver);
+        EventBus.on("enemy-spawned", handleEnemySpawned);
+        EventBus.on("sound-toggled", handleSoundToggled);
 
         return () => {
             EventBus.off("show-help", handleShowHelp);
             EventBus.off("game-over", handleGameOver);
+            EventBus.off("enemy-spawned", handleEnemySpawned);
+            EventBus.off("sound-toggled", handleSoundToggled);
         };
-    }, []);
+    }, [score]);
+
+    useEffect(() => {
+        const savedState = loadGameState();
+        if (savedState && phaserRef.current) {
+            setScore(savedState.score);
+            setRandomWord(savedState.currentWord);
+
+            const restoreState = () => {
+                const scene = phaserRef.current?.scene as Game;
+                if (scene && scene.lancelot && scene.enemy) {
+                    scene.lancelot.setHealth(savedState.lancelotHealth);
+
+                    if (scene.enemy.getTexture() !== savedState.enemySprite) {
+                        scene.enemy.destroy();
+                        scene.enemy = EnemySprite.createEnemy(
+                            scene,
+                            860,
+                            550,
+                            savedState.enemySprite,
+                        );
+                        scene.add.existing(scene.enemy);
+                    }
+
+                    scene.enemy.setHealth(savedState.enemyHealth);
+
+                    if (savedState.isMuted !== undefined) {
+                        scene.setMuted(savedState.isMuted);
+                    }
+                }
+            };
+
+            if (currentSceneKey === "Game") {
+                setTimeout(restoreState, 100);
+            } else {
+                EventBus.on("current-scene-ready", restoreState);
+                return () => {
+                    EventBus.off("current-scene-ready", restoreState);
+                };
+            }
+        }
+    }, [currentSceneKey]);
 
     console.log(randomWord);
+
+    const saveCurrentGameState = (
+        currentScore?: number,
+        currentWord?: typeof randomWord,
+    ) => {
+        if (phaserRef.current) {
+            const scene = phaserRef.current.scene as Game;
+            if (scene && scene.lancelot && scene.enemy) {
+                const state: GameState = {
+                    score: currentScore !== undefined ? currentScore : score,
+                    lancelotHealth: scene.lancelot.getHealth(),
+                    enemyHealth: scene.enemy.getHealth(),
+                    enemySprite: scene.enemy.getTexture(),
+                    isMuted: scene.isMuted,
+                    currentWord:
+                        currentWord !== undefined ? currentWord : randomWord,
+                };
+                saveGameState(state);
+            }
+        }
+    };
 
     // Event emitted from the PhaserGame component
     const currentScene = (scene: Phaser.Scene) => {
@@ -94,6 +185,7 @@ function App() {
         setScore(0);
         setPlayerAnswer("");
         setRandomWord(getRandomWord());
+        clearGameState();
 
         if (phaserRef.current) {
             const scene = phaserRef.current.scene as Game;
@@ -118,7 +210,12 @@ function App() {
                             setPlayerAnswer("");
                             callWeaponAttack(true);
                             callEnemyTakeDamage();
-                            setScore(score + 1);
+                            const newScore = score + 1;
+                            setScore(newScore);
+
+                            setTimeout(() => {
+                                saveCurrentGameState(newScore, newRandomWord);
+                            }, 100);
 
                             setInputBorderColor("#4CAF50");
                             setTimeout(
@@ -128,6 +225,10 @@ function App() {
                         } else {
                             callWeaponAttack(false);
                             callLancelotTakeDamage();
+
+                            setTimeout(() => {
+                                saveCurrentGameState();
+                            }, 100);
 
                             setInputBorderColor("#F44336");
                             setTimeout(
@@ -231,6 +332,7 @@ function App() {
                     <div style={gameOverContentStyle}>
                         <h2 style={helpTitleStyle}>Game Over!</h2>
                         <p style={gameOverScoreStyle}>Final Score: {score}</p>
+                        <p style={highscoreStyle}>Highscore: {highscore}</p>
                         <button
                             style={closeButtonStyle}
                             onClick={handleRestart}
@@ -438,6 +540,14 @@ const gameOverScoreStyle: React.CSSProperties = {
     fontWeight: "bold",
     margin: "24px 0",
     color: "#FFD700",
+    textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
+};
+
+const highscoreStyle: React.CSSProperties = {
+    fontSize: "18px",
+    fontWeight: "bold",
+    margin: "16px 0",
+    color: "#FFA500",
     textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
 };
 

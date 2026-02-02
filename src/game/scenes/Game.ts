@@ -3,6 +3,7 @@ import { EventBus } from "../EventBus";
 import { LancelotSprite } from "../objects/sprites/Lancelot";
 import { Scene } from "phaser";
 import { WeaponSprite } from "../objects/sprites/Weapon";
+import { loadGameState } from "../../utils/storage";
 
 export class Game extends Scene {
     camera: Phaser.Cameras.Scene2D.Camera;
@@ -14,7 +15,7 @@ export class Game extends Scene {
     public enemyWeapon: WeaponSprite;
     private soundButton: Phaser.GameObjects.Image;
     private helpButton: Phaser.GameObjects.Image;
-    private isMuted: boolean = false;
+    public isMuted: boolean = false;
 
     constructor() {
         super("Game");
@@ -22,6 +23,12 @@ export class Game extends Scene {
 
     create() {
         this.camera = this.cameras.main;
+
+        const savedState = loadGameState();
+        if (savedState && savedState.isMuted !== undefined) {
+            this.isMuted = savedState.isMuted;
+            this.sound.mute = savedState.isMuted;
+        }
 
         const tileSize = 16;
         const scale = 8;
@@ -51,7 +58,11 @@ export class Game extends Scene {
         this.add.existing(this.enemy);
         this.add.existing(this.enemyWeapon);
 
-        this.soundButton = this.add.image(40, 40, "sound_on");
+        this.soundButton = this.add.image(
+            40,
+            40,
+            this.isMuted ? "sound_off" : "sound_on",
+        );
         this.soundButton.setScale(4);
         this.soundButton.setInteractive({ useHandCursor: true });
         this.soundButton.setDepth(100);
@@ -90,6 +101,9 @@ export class Game extends Scene {
                     targets: [this.enemy],
                     alpha: 1,
                     duration: 500,
+                    onComplete: () => {
+                        EventBus.emit("enemy-spawned");
+                    },
                 });
             },
         });
@@ -100,6 +114,19 @@ export class Game extends Scene {
         this.sound.mute = this.isMuted;
 
         if (this.isMuted) {
+            this.soundButton.setTexture("sound_off");
+        } else {
+            this.soundButton.setTexture("sound_on");
+        }
+
+        EventBus.emit("sound-toggled");
+    }
+
+    public setMuted(muted: boolean) {
+        this.isMuted = muted;
+        this.sound.mute = muted;
+
+        if (muted) {
             this.soundButton.setTexture("sound_off");
         } else {
             this.soundButton.setTexture("sound_on");
