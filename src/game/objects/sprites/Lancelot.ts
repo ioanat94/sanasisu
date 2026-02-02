@@ -1,3 +1,5 @@
+import { EventBus } from "../../EventBus";
+
 class LancelotSprite extends Phaser.GameObjects.Sprite {
     private maxHealth: number = 3;
     private currentHealth: number = 3;
@@ -50,16 +52,13 @@ class LancelotSprite extends Phaser.GameObjects.Sprite {
 
         scene.add.existing(this);
 
-        // Initialize hearts
         this.updateHearts();
     }
 
     private updateHearts() {
-        // Clear existing hearts
         this.hearts.forEach((heart) => heart.destroy());
         this.hearts = [];
 
-        // Render hearts based on current health
         const heartSpacing = 75;
         const startX = this.heartX - heartSpacing;
 
@@ -110,6 +109,9 @@ class LancelotSprite extends Phaser.GameObjects.Sprite {
 
         setTimeout(() => {
             this.play("death");
+            this.once("animationcomplete-death", () => {
+                EventBus.emit("game-over");
+            });
         }, 400);
     }
 }

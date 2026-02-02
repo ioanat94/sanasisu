@@ -1,7 +1,6 @@
 import { AUTO, Game } from "phaser";
 
 import { Boot } from "./scenes/Boot";
-import { GameOver } from "./scenes/GameOver";
 import { Game as MainGame } from "./scenes/Game";
 import { MainMenu } from "./scenes/MainMenu";
 import { Preloader } from "./scenes/Preloader";
@@ -15,7 +14,7 @@ const config: Phaser.Types.Core.GameConfig = {
     parent: "game-container",
     backgroundColor: "#87ceeb",
     pixelArt: true,
-    scene: [Boot, Preloader, MainMenu, MainGame, GameOver],
+    scene: [Boot, Preloader, MainMenu, MainGame],
 };
 
 const StartGame = (parent: string) => {

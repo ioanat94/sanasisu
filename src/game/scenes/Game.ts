@@ -51,7 +51,6 @@ export class Game extends Scene {
         this.add.existing(this.enemy);
         this.add.existing(this.enemyWeapon);
 
-        // Add sound toggle button (top left)
         this.soundButton = this.add.image(40, 40, "sound_on");
         this.soundButton.setScale(4);
         this.soundButton.setInteractive({ useHandCursor: true });
@@ -61,7 +60,6 @@ export class Game extends Scene {
             this.toggleSound();
         });
 
-        // Add help button (to the right of sound button)
         this.helpButton = this.add.image(100, 40, "help");
         this.helpButton.setScale(4);
         this.helpButton.setInteractive({ useHandCursor: true });
@@ -75,7 +73,6 @@ export class Game extends Scene {
     }
 
     public spawnNewEnemy() {
-        // Fade out and destroy current enemy
         this.tweens.add({
             targets: [this.enemy],
             alpha: 0,
@@ -102,7 +99,6 @@ export class Game extends Scene {
         this.isMuted = !this.isMuted;
         this.sound.mute = this.isMuted;
 
-        // Update button image
         if (this.isMuted) {
             this.soundButton.setTexture("sound_off");
         } else {

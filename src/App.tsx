@@ -20,16 +20,23 @@ function App() {
     const [playerAnswer, setPlayerAnswer] = useState<string>("");
     const [score, setScore] = useState<number>(0);
     const [showHelp, setShowHelp] = useState(false);
+    const [showGameOver, setShowGameOver] = useState(false);
 
     useEffect(() => {
         const handleShowHelp = () => {
             setShowHelp(true);
         };
 
+        const handleGameOver = () => {
+            setShowGameOver(true);
+        };
+
         EventBus.on("show-help", handleShowHelp);
+        EventBus.on("game-over", handleGameOver);
 
         return () => {
             EventBus.off("show-help", handleShowHelp);
+            EventBus.off("game-over", handleGameOver);
         };
     }, []);
 
@@ -78,6 +85,18 @@ function App() {
             } else {
                 scene.enemyWeapon.playAttack();
             }
+        }
+    };
+
+    const handleRestart = () => {
+        setShowGameOver(false);
+        setScore(0);
+        setPlayerAnswer("");
+        setRandomWord(getRandomWord());
+
+        if (phaserRef.current) {
+            const scene = phaserRef.current.scene as Game;
+            scene.scene.restart();
         }
     };
 
@@ -183,6 +202,29 @@ function App() {
                             }
                         >
                             Got it!
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {showGameOver && (
+                <div style={helpOverlayStyle}>
+                    <div style={gameOverContentStyle}>
+                        <h2 style={helpTitleStyle}>Game Over!</h2>
+                        <p style={gameOverScoreStyle}>Final Score: {score}</p>
+                        <button
+                            style={closeButtonStyle}
+                            onClick={handleRestart}
+                            onMouseOver={(e) =>
+                                (e.currentTarget.style.backgroundColor =
+                                    "#A0826D")
+                            }
+                            onMouseOut={(e) =>
+                                (e.currentTarget.style.backgroundColor =
+                                    "#8D6E63")
+                            }
+                        >
+                            Restart
                         </button>
                     </div>
                 </div>
@@ -354,6 +396,30 @@ const closeButtonStyle: React.CSSProperties = {
     transition: "background-color 0.2s",
     fontFamily: "inherit",
     width: "fit-content",
+};
+
+const gameOverContentStyle: React.CSSProperties = {
+    backgroundColor: "#3E2723",
+    color: "#F5E9DA",
+    padding: "32px",
+    borderRadius: "12px",
+    maxWidth: "400px",
+    boxShadow:
+        "0 8px 24px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.1), 0 0 0 12px #8D6E63",
+    backgroundImage: `
+        linear-gradient(rgba(139, 90, 43, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139, 90, 43, 0.1) 1px, transparent 1px)
+    `,
+    backgroundSize: "20px 20px",
+    textAlign: "center",
+};
+
+const gameOverScoreStyle: React.CSSProperties = {
+    fontSize: "24px",
+    fontWeight: "bold",
+    margin: "24px 0",
+    color: "#FFD700",
+    textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
 };
 
 export default App;

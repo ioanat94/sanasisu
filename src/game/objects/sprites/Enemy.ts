@@ -86,16 +86,13 @@ class EnemySprite extends Phaser.GameObjects.Sprite {
 
         scene.add.existing(this);
 
-        // Initialize hearts
         this.updateHearts();
     }
 
     private updateHearts() {
-        // Clear existing hearts
         this.hearts.forEach((heart) => heart.destroy());
         this.hearts = [];
 
-        // Render hearts based on current health
         const heartSpacing = 75;
         const startX = this.heartX - heartSpacing;
 

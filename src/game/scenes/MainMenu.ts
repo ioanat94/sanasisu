@@ -34,11 +34,9 @@ export class MainMenu extends Scene {
             repeat: -1,
         });
 
-        // Add Start button
         const buttonX = this.cameras.main.centerX;
         const buttonY = this.cameras.main.centerY + 100;
 
-        // Create button background
         const buttonBg = this.add.rectangle(
             buttonX,
             buttonY,
@@ -50,7 +48,6 @@ export class MainMenu extends Scene {
         buttonBg.setOrigin(0.5);
         buttonBg.setInteractive({ useHandCursor: true });
 
-        // Create button text
         this.startButton = this.add.text(buttonX, buttonY, "Start", {
             fontFamily: "BoldPixels",
             fontSize: "48px",
@@ -58,7 +55,6 @@ export class MainMenu extends Scene {
         });
         this.startButton.setOrigin(0.5);
 
-        // Hover effects
         buttonBg.on("pointerover", () => {
             buttonBg.setFillStyle(0x6d4c41);
             this.startButton.setColor("#FFFFFF");
@@ -69,7 +65,6 @@ export class MainMenu extends Scene {
             this.startButton.setColor("#3E2723");
         });
 
-        // Click to start game
         buttonBg.on("pointerdown", () => {
             buttonBg.setFillStyle(0x5d4037);
             this.changeScene();
