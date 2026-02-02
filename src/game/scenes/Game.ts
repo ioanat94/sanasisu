@@ -67,6 +67,10 @@ export class Game extends Scene {
         this.helpButton.setInteractive({ useHandCursor: true });
         this.helpButton.setDepth(100);
 
+        this.helpButton.on("pointerdown", () => {
+            EventBus.emit("show-help");
+        });
+
         EventBus.emit("current-scene-ready", this);
     }
 
