@@ -21,6 +21,7 @@ function App() {
     const [score, setScore] = useState<number>(0);
     const [showHelp, setShowHelp] = useState(false);
     const [showGameOver, setShowGameOver] = useState(false);
+    const [inputBorderColor, setInputBorderColor] = useState<string>("#8D6E63");
 
     useEffect(() => {
         const handleShowHelp = () => {
@@ -109,6 +110,8 @@ function App() {
                     onSubmit={(e) => {
                         e.preventDefault();
 
+                        if (playerAnswer.trim() === "") return;
+
                         if (playerAnswer === randomWord.caseValue) {
                             const newRandomWord = getRandomWord();
                             setRandomWord(newRandomWord);
@@ -116,9 +119,21 @@ function App() {
                             callWeaponAttack(true);
                             callEnemyTakeDamage();
                             setScore(score + 1);
+
+                            setInputBorderColor("#4CAF50");
+                            setTimeout(
+                                () => setInputBorderColor("#8D6E63"),
+                                500,
+                            );
                         } else {
                             callWeaponAttack(false);
                             callLancelotTakeDamage();
+
+                            setInputBorderColor("#F44336");
+                            setTimeout(
+                                () => setInputBorderColor("#8D6E63"),
+                                500,
+                            );
                         }
                     }}
                 >
@@ -133,12 +148,16 @@ function App() {
                     <input
                         type="text"
                         placeholder="Enter answer..."
-                        style={inputStyle}
+                        style={{ ...inputStyle, borderColor: inputBorderColor }}
                         onFocus={(e) => {
-                            e.currentTarget.style.borderColor = "#FFD700";
+                            if (inputBorderColor === "#8D6E63") {
+                                e.currentTarget.style.borderColor = "#FFD700";
+                            }
                         }}
                         onBlur={(e) => {
-                            e.currentTarget.style.borderColor = "#8D6E63";
+                            if (inputBorderColor === "#8D6E63") {
+                                e.currentTarget.style.borderColor = "#8D6E63";
+                            }
                         }}
                         value={playerAnswer}
                         onChange={(e) => setPlayerAnswer(e.target.value)}
