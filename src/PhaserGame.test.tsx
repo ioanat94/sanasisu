@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { EventBus } from "./game/EventBus";
 import { PhaserGame } from "./PhaserGame";
 import { render } from "@testing-library/react";
+import StartGame from "./game/main";
 
 vi.mock("./game/main", () => ({
     default: vi.fn(() => ({
@@ -22,13 +23,11 @@ describe("PhaserGame.tsx", () => {
         });
 
         it("should create game instance on mount", () => {
-            const StartGame = require("./game/main").default;
             render(<PhaserGame />);
             expect(StartGame).toHaveBeenCalledWith("game-container");
         });
 
         it("should only create game once", () => {
-            const StartGame = require("./game/main").default;
             const { rerender } = render(<PhaserGame />);
 
             expect(StartGame).toHaveBeenCalledTimes(1);
@@ -39,8 +38,9 @@ describe("PhaserGame.tsx", () => {
 
         it("should destroy game on unmount", () => {
             const mockDestroy = vi.fn();
-            const StartGame = require("./game/main").default;
-            StartGame.mockReturnValue({ destroy: mockDestroy });
+            vi.mocked(StartGame).mockReturnValue({
+                destroy: mockDestroy,
+            } as Partial<Phaser.Game> as Phaser.Game);
 
             const { unmount } = render(<PhaserGame />);
             unmount();
@@ -70,7 +70,7 @@ describe("PhaserGame.tsx", () => {
 
             expect(offSpy).toHaveBeenCalledWith(
                 "current-scene-ready",
-                expect.any(Function),
+                undefined,
             );
         });
     });

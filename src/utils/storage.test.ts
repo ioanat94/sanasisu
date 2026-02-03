@@ -11,7 +11,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 describe("storage.ts", () => {
     beforeEach(() => {
         localStorage.clear();
-        vi.clearAllMocks();
+        vi.restoreAllMocks();
     });
 
     describe("saveGameState", () => {

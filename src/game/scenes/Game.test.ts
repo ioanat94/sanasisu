@@ -57,7 +57,7 @@ describe("Game.ts", () => {
             mockScene.create();
             const initialMuted = mockScene.isMuted;
 
-            (mockScene as any).toggleSound();
+            (mockScene as unknown as { toggleSound: () => void }).toggleSound();
 
             expect(mockScene.isMuted).toBe(!initialMuted);
         });
@@ -66,7 +66,7 @@ describe("Game.ts", () => {
             const emitSpy = vi.spyOn(EventBus, "emit");
             mockScene.create();
 
-            (mockScene as any).toggleSound();
+            (mockScene as unknown as { toggleSound: () => void }).toggleSound();
 
             expect(emitSpy).toHaveBeenCalledWith("sound-toggled");
         });
@@ -87,10 +87,13 @@ describe("Game.ts", () => {
             const emitSpy = vi.spyOn(EventBus, "emit");
             mockScene.create();
 
-            mockScene.tweens.add = vi.fn((config: any) => {
-                config.onComplete?.();
-                return {} as any;
-            });
+            mockScene.tweens.add = vi.fn(
+                (config: Phaser.Types.Tweens.TweenBuilderConfig) => {
+                    const tween = {} as Phaser.Tweens.Tween;
+                    config.onComplete?.(tween, []);
+                    return tween;
+                },
+            );
 
             mockScene.spawnNewEnemy();
 
@@ -116,10 +119,12 @@ describe("Game.ts", () => {
 
             if (mockScene["helpButton"]) {
                 const pointerdownHandler = (
-                    mockScene["helpButton"].on as any
+                    mockScene["helpButton"].on as unknown as ReturnType<
+                        typeof vi.fn
+                    >
                 ).mock.calls.find(
-                    (call: any[]) => call[0] === "pointerdown",
-                )?.[1];
+                    (call: unknown[]) => call[0] === "pointerdown",
+                )?.[1] as (() => void) | undefined;
 
                 if (pointerdownHandler) {
                     pointerdownHandler();

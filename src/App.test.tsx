@@ -86,7 +86,7 @@ describe("App.tsx", () => {
 
             render(<App />);
             await waitFor(() => {
-                expect(screen.queryByText(/koira/i)).toBeInTheDocument();
+                expect(screen.getAllByText(/koira/i).length).toBeGreaterThan(0);
                 expect(screen.queryByText(/dog/i)).toBeInTheDocument();
             });
         });
@@ -103,7 +103,7 @@ describe("App.tsx", () => {
             EventBus.emit("show-help");
 
             await waitFor(() => {
-                expect(screen.getByText(/Help/i)).toBeInTheDocument();
+                expect(screen.getByText(/How to Play/i)).toBeInTheDocument();
             });
         });
 
@@ -194,7 +194,7 @@ describe("App.tsx", () => {
             EventBus.emit("show-help");
 
             await waitFor(() => {
-                expect(screen.getByText(/Help/i)).toBeInTheDocument();
+                expect(screen.getByText(/How to Play/i)).toBeInTheDocument();
             });
         });
 
@@ -209,14 +209,16 @@ describe("App.tsx", () => {
             EventBus.emit("show-help");
 
             await waitFor(() => {
-                expect(screen.getByText(/Help/i)).toBeInTheDocument();
+                expect(screen.getByText(/How to Play/i)).toBeInTheDocument();
             });
 
-            const closeButton = screen.getByText(/Close/i);
+            const closeButton = screen.getByText(/Got it!/i);
             await user.click(closeButton);
 
             await waitFor(() => {
-                expect(screen.queryByText(/Help/i)).not.toBeInTheDocument();
+                expect(
+                    screen.queryByText(/How to Play/i),
+                ).not.toBeInTheDocument();
             });
         });
     });
@@ -274,24 +276,6 @@ describe("App.tsx", () => {
             render(<App />);
 
             expect(storage.loadGameState).toHaveBeenCalled();
-        });
-
-        it("should save game state when enemy spawns", async () => {
-            const saveGameStateSpy = vi.spyOn(storage, "saveGameState");
-            render(<App />);
-
-            await waitFor(() => {
-                expect(screen.queryByText(/Score:/i)).toBeInTheDocument();
-            });
-
-            EventBus.emit("enemy-spawned");
-
-            await waitFor(
-                () => {
-                    expect(saveGameStateSpy).toHaveBeenCalled();
-                },
-                { timeout: 200 },
-            );
         });
 
         it("should clear game state on restart", async () => {

@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { EnemySprite } from "../../objects/sprites/Enemy";
 
 describe("Enemy.ts", () => {
-    let mockScene: any;
+    let mockScene: Phaser.Scene;
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -14,18 +14,18 @@ describe("Enemy.ts", () => {
                 image: vi.fn(() => ({
                     setScale: vi.fn().mockReturnThis(),
                     destroy: vi.fn(),
-                })),
+                })) as unknown as Phaser.GameObjects.GameObjectFactory["image"],
             },
             sound: {
                 add: vi.fn(() => ({
                     play: vi.fn(),
-                })),
+                })) as unknown as Phaser.Sound.BaseSoundManager["add"],
             },
             anims: {
                 create: vi.fn(),
                 generateFrameNumbers: vi.fn(),
-            },
-        };
+            } as unknown as Phaser.Animations.AnimationManager,
+        } as unknown as Phaser.Scene;
     });
 
     describe("Constructor", () => {
@@ -222,7 +222,7 @@ describe("Enemy.ts", () => {
         it("should update hearts when health changes", () => {
             const enemy = new EnemySprite(mockScene, 100, 200, "goblin");
 
-            mockScene.add.image.mockClear();
+            vi.mocked(mockScene.add.image).mockClear();
 
             enemy.takeDamage(1);
 

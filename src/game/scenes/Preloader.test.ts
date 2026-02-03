@@ -175,15 +175,24 @@ describe("Preloader.ts", () => {
                 width: 4,
             };
 
+            const mockRect: Record<string, unknown> = {};
+            mockRect.setStrokeStyle = vi.fn().mockReturnValue(mockRect);
+            mockRect.setFillStyle = vi.fn().mockReturnValue(mockRect);
+            mockRect.setSize = vi.fn().mockReturnValue(mockRect);
+
             vi.spyOn(scene.add, "rectangle")
-                .mockReturnValueOnce({} as any)
-                .mockReturnValueOnce(mockBar as any);
+                .mockReturnValueOnce(
+                    mockRect as unknown as Phaser.GameObjects.Rectangle,
+                )
+                .mockReturnValueOnce(mockBar as Phaser.GameObjects.Rectangle);
 
             scene.init();
 
-            const progressCallback = (scene.load.on as any).mock.calls.find(
-                (call: any[]) => call[0] === "progress",
-            )?.[1];
+            const progressCallback = (
+                scene.load.on as unknown as ReturnType<typeof vi.fn>
+            ).mock.calls.find(
+                (call: unknown[]) => call[0] === "progress",
+            )?.[1] as ((progress: number) => void) | undefined;
 
             if (progressCallback) {
                 progressCallback(0.5);

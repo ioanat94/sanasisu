@@ -68,6 +68,7 @@ function App() {
             EventBus.off("enemy-spawned", handleEnemySpawned);
             EventBus.off("sound-toggled", handleSoundToggled);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [score]);
 
     useEffect(() => {

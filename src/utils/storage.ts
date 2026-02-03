@@ -47,7 +47,8 @@ export const clearGameState = (): void => {
 export const getHighscore = (): number => {
     try {
         const saved = localStorage.getItem(HIGHSCORE_KEY);
-        return saved ? parseInt(saved, 10) : 0;
+        const parsed = saved ? parseInt(saved, 10) : 0;
+        return isNaN(parsed) ? 0 : parsed;
     } catch (error) {
         console.error("Failed to get highscore:", error);
         return 0;

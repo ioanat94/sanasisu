@@ -4,7 +4,7 @@ import { EventBus } from "../../EventBus";
 import { LancelotSprite } from "../../objects/sprites/Lancelot";
 
 describe("Lancelot.ts", () => {
-    let mockScene: any;
+    let mockScene: Phaser.Scene;
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -15,18 +15,18 @@ describe("Lancelot.ts", () => {
                 image: vi.fn(() => ({
                     setScale: vi.fn().mockReturnThis(),
                     destroy: vi.fn(),
-                })),
+                })) as unknown as Phaser.GameObjects.GameObjectFactory["image"],
             },
             sound: {
                 add: vi.fn(() => ({
                     play: vi.fn(),
-                })),
+                })) as unknown as Phaser.Sound.BaseSoundManager["add"],
             },
             anims: {
                 create: vi.fn(),
                 generateFrameNumbers: vi.fn(),
-            },
-        };
+            } as unknown as Phaser.Animations.AnimationManager,
+        } as unknown as Phaser.Scene;
     });
 
     describe("Constructor", () => {
@@ -235,10 +235,12 @@ describe("Lancelot.ts", () => {
             lancelot.takeDamage(3);
             vi.advanceTimersByTime(400);
 
-            const onceCalls = (lancelot.once as any).mock.calls;
+            const onceCalls = (
+                lancelot.once as unknown as ReturnType<typeof vi.fn>
+            ).mock.calls;
             const deathCallback = onceCalls.find(
-                (call: any[]) => call[0] === "animationcomplete-death",
-            );
+                (call: unknown[]) => call[0] === "animationcomplete-death",
+            ) as [string, () => void] | undefined;
             if (deathCallback) {
                 deathCallback[1]();
             }
@@ -264,7 +266,7 @@ describe("Lancelot.ts", () => {
                 "lancelot",
             );
 
-            mockScene.add.image.mockClear();
+            vi.mocked(mockScene.add.image).mockClear();
 
             lancelot.takeDamage(1);
 
@@ -279,10 +281,10 @@ describe("Lancelot.ts", () => {
                 "lancelot",
             );
 
-            mockScene.add.image.mockClear();
+            vi.mocked(mockScene.add.image).mockClear();
             lancelot.setHealth(2);
 
-            const calls = mockScene.add.image.mock.calls;
+            const calls = vi.mocked(mockScene.add.image).mock.calls;
 
             expect(calls[0][2]).toBe("heart_full");
             expect(calls[1][2]).toBe("heart_full");

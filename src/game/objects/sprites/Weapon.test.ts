@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { WeaponSprite } from "../../objects/sprites/Weapon";
 
 describe("Weapon.ts", () => {
-    let mockScene: any;
+    let mockScene: Phaser.Scene;
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -15,12 +15,12 @@ describe("Weapon.ts", () => {
             sound: {
                 add: vi.fn(() => ({
                     play: vi.fn(),
-                })),
+                })) as unknown as Phaser.Sound.BaseSoundManager["add"],
             },
             anims: {
                 create: vi.fn(),
                 generateFrameNumbers: vi.fn(),
-            },
+            } as unknown as Phaser.Animations.AnimationManager,
             tweens: {
                 add: vi.fn(() => ({
                     pause: vi.fn(),
@@ -28,7 +28,7 @@ describe("Weapon.ts", () => {
                     stop: vi.fn(),
                 })),
             },
-        };
+        } as unknown as Phaser.Scene;
     });
 
     describe("Constructor", () => {
@@ -102,7 +102,12 @@ describe("Weapon.ts", () => {
                 .spyOn(console, "error")
                 .mockImplementation(() => {});
 
-            new WeaponSprite(mockScene, 100, 200, "invalid_weapon" as any);
+            new WeaponSprite(
+                mockScene,
+                100,
+                200,
+                "invalid_weapon" as unknown as string,
+            );
 
             expect(consoleSpy).toHaveBeenCalledWith(
                 "No animation config found for weapon: invalid_weapon",
@@ -115,7 +120,8 @@ describe("Weapon.ts", () => {
     describe("Attack Animation", () => {
         it("should pause float tween during attack", () => {
             const weapon = new WeaponSprite(mockScene, 100, 200, "excalibur");
-            const mockTween = mockScene.tweens.add.mock.results[0].value;
+            const mockTween = vi.mocked(mockScene.tweens.add).mock.results[0]
+                .value;
 
             weapon.playAttack();
 
@@ -158,14 +164,17 @@ describe("Weapon.ts", () => {
 
         it("should resume float tween after attack completes", () => {
             const weapon = new WeaponSprite(mockScene, 100, 200, "excalibur");
-            const mockTween = mockScene.tweens.add.mock.results[0].value;
+            const mockTween = vi.mocked(mockScene.tweens.add).mock.results[0]
+                .value;
 
             weapon.playAttack();
 
-            const onceCalls = (weapon.once as any).mock.calls;
+            const onceCalls = (
+                weapon.once as unknown as ReturnType<typeof vi.fn>
+            ).mock.calls;
             const attackCallback = onceCalls.find(
-                (call: any[]) => call[0] === "animationcomplete-attack",
-            );
+                (call: unknown[]) => call[0] === "animationcomplete-attack",
+            ) as [string, () => void] | undefined;
             if (attackCallback) {
                 attackCallback[1]();
             }
@@ -179,10 +188,12 @@ describe("Weapon.ts", () => {
 
             weapon.playAttack();
 
-            const onceCalls = (weapon.once as any).mock.calls;
+            const onceCalls = (
+                weapon.once as unknown as ReturnType<typeof vi.fn>
+            ).mock.calls;
             const attackCallback = onceCalls.find(
-                (call: any[]) => call[0] === "animationcomplete-attack",
-            );
+                (call: unknown[]) => call[0] === "animationcomplete-attack",
+            ) as [string, () => void] | undefined;
             if (attackCallback) {
                 attackCallback[1]();
             }
@@ -195,7 +206,8 @@ describe("Weapon.ts", () => {
         it("should create continuous floating effect", () => {
             new WeaponSprite(mockScene, 100, 200, "excalibur");
 
-            const tweenConfig = mockScene.tweens.add.mock.calls[0][0];
+            const tweenConfig = vi.mocked(mockScene.tweens.add).mock
+                .calls[0][0] as Phaser.Types.Tweens.TweenBuilderConfig;
 
             expect(tweenConfig.repeat).toBe(-1);
             expect(tweenConfig.yoyo).toBe(true);
@@ -204,7 +216,8 @@ describe("Weapon.ts", () => {
         it("should float 10 pixels down and back", () => {
             new WeaponSprite(mockScene, 100, 200, "excalibur");
 
-            const tweenConfig = mockScene.tweens.add.mock.calls[0][0];
+            const tweenConfig = vi.mocked(mockScene.tweens.add).mock
+                .calls[0][0] as Phaser.Types.Tweens.TweenBuilderConfig;
 
             expect(tweenConfig.y).toBe(210);
         });

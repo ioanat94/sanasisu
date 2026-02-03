@@ -1,28 +1,30 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+type EventListener = (...args: unknown[]) => void;
+
 vi.mock("phaser", () => ({
     Events: {
         EventEmitter: class {
-            events = new Map();
-            on(event: string, fn: Function) {
+            events = new Map<string, EventListener[]>();
+            on(event: string, fn: EventListener) {
                 if (!this.events.has(event)) {
                     this.events.set(event, []);
                 }
                 this.events.get(event)!.push(fn);
             }
-            emit(event: string, ...args: any[]) {
+            emit(event: string, ...args: unknown[]) {
                 if (this.events.has(event)) {
                     this.events
                         .get(event)!
-                        .forEach((fn: Function) => fn(...args));
+                        .forEach((fn: EventListener) => fn(...args));
                 }
             }
-            off(event: string, fn?: Function) {
+            off(event: string, fn?: EventListener) {
                 if (fn) {
                     const fns = this.events.get(event) || [];
                     this.events.set(
                         event,
-                        fns.filter((f: Function) => f !== fn),
+                        fns.filter((f: EventListener) => f !== fn),
                     );
                 } else {
                     this.events.delete(event);
