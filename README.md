@@ -65,6 +65,7 @@ Your progress is saved locally to your browser after every answer. As long as yo
 * [Typescript](https://www.typescriptlang.org/)
 * [React.js](https://reactjs.org/)
 * [Vite](https://vite.dev/)
+* [Vitest](https://vitest.dev/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
